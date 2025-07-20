@@ -2,6 +2,12 @@
   <div class="container">
     <h1>Ollama Query Interface</h1>
 
+    <label class="label">Model</label>
+    <select v-model="model" class="model-select">
+      <option value="granite">Granite</option>
+      <option value="llama">LLaMA 3</option>
+    </select>
+
     <label class="label">Query</label>
     <textarea v-model="query" rows="12" class="query-input"></textarea>
 
@@ -24,16 +30,13 @@
 import { ref } from 'vue'
 
 const file = ref(null)
-const query = ref(`I am attaching a University Transcript
+const model = ref("granite")
+const query = ref(`I am attaching a Resume
 
-Your job is to extract the below details from the attachment -
-Course Code
-Course Name
-Course Credits Earned
-Course Grade (Letter Grade if available)
-Course Semester
+Your job is to extract all key information from the following resume. Return the data in structured JSON format with fields including:
 
-And return the properly formatted HTML table, which I can set in the inner html of div to show the results.`)
+And return the properly , which I can set in the inner html of div to show the results.`)
+
 const result = ref('')
 const loading = ref(false)
 const error = ref('')
@@ -51,8 +54,9 @@ async function extractData() {
     const formData = new FormData()
     if (file.value) formData.append('file', file.value)
     formData.append('query', query.value)
+    formData.append('model', model.value)
 
-    const res = await fetch('http://localhost:3001/api/granite', {
+    const res = await fetch('http://localhost:3001/api/llm', {
       method: 'POST',
       body: formData,
     })
@@ -85,6 +89,13 @@ async function extractData() {
   display: block;
   margin: 1rem 0 0.5rem;
   font-weight: bold;
+}
+
+.model-select {
+  width: 100%;
+  padding: 0.5rem;
+  margin-bottom: 1rem;
+  font-size: 1rem;
 }
 
 .query-input {
