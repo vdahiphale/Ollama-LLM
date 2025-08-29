@@ -63,6 +63,7 @@ vue --version
 
 ```sh
 ollama run granite3.2-vision:2b
+ollama run llama3.2-vision:11b
 ```
 
 ---
