@@ -48,16 +48,35 @@ app.post("/api/granite", upload.single("file"), async (req, res) => {
       }
     }
 
+    console.log(
+      "Sending request to Granite with",
+      imageBuffers.length,
+      "images"
+    );
+
+    // const graniteRes = await fetch("http://localhost:11434/api/generate", {
+    //   method: "POST",
+    //   headers: { "Content-Type": "application/json" },
+    //   body: JSON.stringify({
+    //     model: "granite3.2-vision:2b",
+    //     prompt: query || "Describe the input if no query provided.",
+    //     images: imageBuffers.length > 0 ? imageBuffers : undefined,
+    //     stream: false,
+    //   }),
+    // });
+
     const graniteRes = await fetch("http://localhost:11434/api/generate", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        model: "granite3.2-vision:2b",
+        model: "llama3.2-vision:11b",
         prompt: query || "Describe the input if no query provided.",
         images: imageBuffers.length > 0 ? imageBuffers : undefined,
         stream: false,
       }),
     });
+
+    console.log("Granite response received");
 
     const graniteData = await graniteRes.json();
     if (!graniteData.response) {
